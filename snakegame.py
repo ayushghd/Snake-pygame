@@ -21,6 +21,7 @@ mediumfont=pygame.font.SysFont("comicsansms",40)
 largefont=pygame.font.SysFont("comicsansms",60)
 appleimg = pygame.image.load('apple.png')
 snakeimg = pygame.image.load('snake.png')
+highest=0
 
 def intro_to_game():
     intro = True
@@ -47,7 +48,11 @@ def intro_to_game():
         
         pygame.display.update()
         clock.tick(15)
-
+        
+def highscore(highest):
+    text=smallfont.render("High Score : "+str(highest),True,black)
+    gameDisplay.blit(text,[600,0])
+    
 def score(score):
     text =  smallfont.render("Score : "+str(score),True,black)
     gameDisplay.blit(text,[0,0])
@@ -98,7 +103,7 @@ def message_to_screen(msg,color,y_displace=0,size="small"):
     gameDisplay.blit(textSurf,textRect)
 
     
-def gameLoop():
+def gameLoop(highest):
     gameFalse = False
     gameOver = False
     lead_x=display_Width/2
@@ -126,7 +131,7 @@ def gameLoop():
                         gameFalse=True
                         gameOver=False
                     if event.key==pygame.K_c:
-                        gameLoop()
+                        gameLoop(highest)
                     
         for event in pygame.event.get():
             if event.type==pygame.QUIT:
@@ -169,6 +174,9 @@ def gameLoop():
         snake(snakelist,block_size)
         #gameDisplay.fill(red,rect=[lead_x,lead_y,10,10])
         score(snakelength-1)
+        if highest < snakelength-1:
+            highest=snakelength-1
+        highscore(highest)
         pygame.display.update()
 
         if lead_x>=rand_apple_x and lead_x<=rand_apple_x+apple_thickness or lead_x + block_size > rand_apple_x and lead_x + block_size < rand_apple_x + apple_thickness:
@@ -181,4 +189,4 @@ def gameLoop():
     quit()
     pygame.quit()
 intro_to_game()
-gameLoop()
+gameLoop(highest)
